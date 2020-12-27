@@ -1,0 +1,36 @@
+{
+  "name": "JS-Flappy-Dude",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npx npm-force-resolutions",
+    "clean": "rm -rf ./development && rm -rf ./.cache && rm -rf ./dist",
+    "build": "npm run clean && parcel build src/index.html --out-dir dist --public-url ./",
+    "dev": "npm run clean && parcel src/index.html --out-dir development -p 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "resolutions": {
+    "node-forge": "0.10.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/runtime-corejs2": "^7.12.5",
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.29.0"
+  },
+  "babel": {
+    "plugins": [
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          "corejs": 2,
+          "regenerator": true
+        }
+      ]
+    ]
+  }
+}
