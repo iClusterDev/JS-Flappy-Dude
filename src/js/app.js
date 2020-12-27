@@ -29,9 +29,10 @@ const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   bird.update(canvas, spacePressed, angle);
   bird.draw(ctx);
-  handleParticles(gameSpeed, ctx, bird);
+  handleParticles(gameSpeed, ctx, bird, hue);
   requestAnimationFrame(animate);
   angle += 0.25;
+  hue += 1;
 };
 
 export default () => {

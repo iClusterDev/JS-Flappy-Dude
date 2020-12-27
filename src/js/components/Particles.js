@@ -1,12 +1,12 @@
 const particlesArray = [];
 
 class Particle {
-  constructor(target) {
+  constructor(target, hue) {
     this.x = target.x;
     this.y = target.y;
     this.size = Math.random() * 7 + 3;
     this.speed = Math.random() * 1 - 0.5;
-    this.color = 'red';
+    this.color = `hsla(${hue}, 100%, 50%, 0.8)`;
   }
 
   update(gameSpeed) {
@@ -22,8 +22,8 @@ class Particle {
   }
 }
 
-export default (gameSpeed, ctx2d, target) => {
-  particlesArray.unshift(new Particle(target));
+export default (gameSpeed, ctx2d, target, hue) => {
+  particlesArray.unshift(new Particle(target, hue));
   for (let i = 0; i < particlesArray.length; i++) {
     particlesArray[i].update(gameSpeed);
     particlesArray[i].draw(ctx2d);
