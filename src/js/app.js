@@ -1,5 +1,6 @@
 import bird from './components/Bird';
 import handleParticles from './components/Particles';
+import handleObstacles from './components/Obstacles';
 
 // global variables
 const canvas = document.getElementById('canvas1');
@@ -27,12 +28,14 @@ window.addEventListener('keyup', (e) => {
 // functions
 const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  handleObstacles(canvas, ctx, gameSpeed, frame);
   bird.update(canvas, spacePressed, angle);
   bird.draw(ctx);
   handleParticles(gameSpeed, ctx, bird, hue);
   requestAnimationFrame(animate);
   angle += 0.25;
-  hue += 1;
+  hue++;
+  frame++;
 };
 
 export default () => {
