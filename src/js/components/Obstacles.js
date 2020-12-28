@@ -20,7 +20,7 @@ class Obstacle {
   }
 }
 
-export default (viewport, ctx2d, gamespeed, frame) => {
+const handleObstacles = (viewport, ctx2d, gamespeed, frame) => {
   if (frame % 100 === 0) {
     obstaclesArray.unshift(new Obstacle(viewport));
   }
@@ -31,3 +31,20 @@ export default (viewport, ctx2d, gamespeed, frame) => {
     obstaclesArray.pop(obstaclesArray[0]);
   }
 };
+
+const handleCollision = (player, viewport) => {
+  for (let i = 0; i < obstaclesArray.length; i++) {
+    if (
+      player.x < obstaclesArray[i].x + obstaclesArray[i].width &&
+      player.x + player.width > obstaclesArray[i].x &&
+      (player.y < obstaclesArray[i].top ||
+        player.y + player.height > viewport.height - obstaclesArray[i].bot)
+    ) {
+      return true;
+    }
+  }
+};
+
+const obstacles = { handleObstacles, handleCollision };
+
+export default obstacles;

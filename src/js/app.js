@@ -1,6 +1,8 @@
 import bird from './components/Bird';
 import handleParticles from './components/Particles';
-import handleObstacles from './components/Obstacles';
+import obstacles from './components/Obstacles';
+
+const { handleObstacles, handleCollision } = obstacles;
 
 // global variables
 const canvas = document.getElementById('canvas1');
@@ -31,6 +33,8 @@ const animate = () => {
   handleObstacles(canvas, ctx, gameSpeed, frame);
   bird.update(canvas, spacePressed, angle);
   bird.draw(ctx);
+  handleCollision(bird, canvas);
+  if (handleCollision(bird, canvas)) return;
   handleParticles(gameSpeed, ctx, bird, hue);
   requestAnimationFrame(animate);
   angle += 0.25;

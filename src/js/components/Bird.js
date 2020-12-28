@@ -1,11 +1,12 @@
 class Bird {
   constructor() {
     this.x = 150;
-    this.y = 200;
+    this.y = 150;
     this.vy = 0;
     this.width = 20;
     this.height = 20;
     this.weight = 0.75;
+    this.color = 'red';
   }
 
   update(viewport, spacePressed, angle) {
@@ -34,7 +35,7 @@ class Bird {
   }
 
   draw(ctx2d) {
-    ctx2d.fillStyle = 'red';
+    ctx2d.fillStyle = this.color;
     ctx2d.fillRect(this.x, this.y, this.width, this.height);
   }
 
