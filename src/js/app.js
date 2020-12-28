@@ -4,7 +4,7 @@ import obstacles from './components/Obstacles';
 
 const { handleObstacles, handleCollision } = obstacles;
 
-// global variables
+// global variables!
 const canvas = document.getElementById('canvas1');
 canvas.width = 600;
 canvas.height = 400;
