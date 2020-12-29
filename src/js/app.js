@@ -4,10 +4,27 @@ import obstacles from './components/Obstacles';
 
 const { handleObstacles, handleCollision } = obstacles;
 
-// global variables!
-const canvas = document.getElementById('canvas1');
+// -------------------------------------------------------------
+// GLOBAL
+// Viewport
+// is a canvas element
+// has width & height
+// has its style
+// has it's context
+// -------------------------------------------------------------
+let canvas = document.createElement('canvas');
+canvas.id = 'viewport';
 canvas.width = 600;
 canvas.height = 400;
+canvas.style.border = 'solid 1px black';
+document.body.appendChild(canvas);
+
+// console.log(document.querySelector('#viewport'));
+
+// global variables!
+// const canvas = document.getElementById('canvas1');
+// canvas.width = 600;
+// canvas.height = 400;
 
 const ctx = canvas.getContext('2d');
 
