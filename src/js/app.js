@@ -30,11 +30,20 @@ window.addEventListener('keyup', (e) => {
 // functions
 const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  handleObstacles(canvas, ctx, gameSpeed, frame);
+  handleObstacles(canvas, ctx, gameSpeed, frame, bird, score);
   bird.update(canvas, spacePressed, angle);
   bird.draw(ctx);
+  ctx.fillStyle = 'red';
+  ctx.font = '90px Georgia';
+  ctx.strokeText(score, 450, 70);
+  ctx.fillText(score, 450, 70);
   handleCollision(bird, canvas);
-  if (handleCollision(bird, canvas)) return;
+  if (handleCollision(bird, canvas)) {
+    ctx.font = '25px Georgia';
+    ctx.fillStyle = 'black';
+    ctx.fillText('Game Over', canvas.width - 150, canvas.height - 50);
+    return;
+  }
   handleParticles(gameSpeed, ctx, bird, hue);
   requestAnimationFrame(animate);
   angle += 0.25;

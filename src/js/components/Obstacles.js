@@ -7,6 +7,7 @@ class Obstacle {
     this.x = viewport.width;
     this.width = 40;
     this.color = 'blue';
+    this.counted = false;
   }
 
   draw(ctx2d, viewport) {
@@ -14,18 +15,24 @@ class Obstacle {
     ctx2d.fillRect(this.x, 0, this.width, this.top);
     ctx2d.fillRect(this.x, viewport.height - this.bot, this.width, this.bot);
   }
-  update(gameSpeed, ctx2d, viewport) {
+  update(gameSpeed, ctx2d, viewport, player, score) {
     this.x -= gameSpeed;
+    if (!this.counted && this.x < player.x) {
+      score++;
+      this.counted = true;
+      console.log(this.counted, score);
+      // return;
+    }
     this.draw(ctx2d, viewport);
   }
 }
 
-const handleObstacles = (viewport, ctx2d, gamespeed, frame) => {
+const handleObstacles = (viewport, ctx2d, gamespeed, frame, player, score) => {
   if (frame % 100 === 0) {
     obstaclesArray.unshift(new Obstacle(viewport));
   }
   for (let i = 0; i < obstaclesArray.length; i++) {
-    obstaclesArray[i].update(gamespeed, ctx2d, viewport);
+    obstaclesArray[i].update(gamespeed, ctx2d, viewport, player, score);
   }
   if (obstaclesArray.length > 20) {
     obstaclesArray.pop(obstaclesArray[0]);
