@@ -1,73 +1,64 @@
-import bird from './components/Bird';
-import handleParticles from './components/Particles';
-import obstacles from './components/Obstacles';
+// viewport block
+let viewport = document.createElement('canvas');
+viewport.id = 'viewport';
+viewport.width = 600;
+viewport.height = 400;
+viewport.style.border = 'solid 1px black';
+document.body.appendChild(viewport);
+const ctx = viewport.getContext('2d');
 
-const { handleObstacles, handleCollision } = obstacles;
-
-// -------------------------------------------------------------
-// GLOBAL
-// Viewport
-// is a canvas element
-// has width & height
-// has its style
-// has it's context
-// -------------------------------------------------------------
-let canvas = document.createElement('canvas');
-canvas.id = 'viewport';
-canvas.width = 600;
-canvas.height = 400;
-canvas.style.border = 'solid 1px black';
-document.body.appendChild(canvas);
-
-// console.log(document.querySelector('#viewport'));
-
-// global variables!
-// const canvas = document.getElementById('canvas1');
-// canvas.width = 600;
-// canvas.height = 400;
-
-const ctx = canvas.getContext('2d');
-
-let spacePressed = false;
-let angle = 0;
-let hue = 0;
-let frame = 0;
-let score = 0;
-let gameSpeed = 2;
-
-// events
-window.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') spacePressed = true;
-});
-
-window.addEventListener('keyup', (e) => {
-  if (e.code === 'Space') spacePressed = false;
-});
-
-// functions
-const animate = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  handleObstacles(canvas, ctx, gameSpeed, frame, bird, score);
-  bird.update(canvas, spacePressed, angle);
-  bird.draw(ctx);
-  ctx.fillStyle = 'red';
-  ctx.font = '90px Georgia';
-  ctx.strokeText(score, 450, 70);
-  ctx.fillText(score, 450, 70);
-  handleCollision(bird, canvas);
-  if (handleCollision(bird, canvas)) {
-    ctx.font = '25px Georgia';
-    ctx.fillStyle = 'black';
-    ctx.fillText('Game Over', canvas.width - 150, canvas.height - 50);
-    return;
+// item block
+class Item {
+  constructor(ctx) {
+    this.posX = 0;
+    this.posY = 0;
+    this.width = 50;
+    this.height = 50;
+    this.color = 'red';
+    this.deltaX = 5; // pixel/s?
+    this.deltaY = 5; // pixel/s?
+    // FIXME
+    // this still depends on the viewport context?
+    this.ctx = ctx;
+    this.ctxW = ctx.canvas.width;
+    this.ctxH = ctx.canvas.height;
   }
-  handleParticles(gameSpeed, ctx, bird, hue);
-  requestAnimationFrame(animate);
-  angle += 0.25;
-  hue++;
-  frame++;
-};
+
+  draw() {
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(this.posX, this.posY, this.width, this.height);
+  }
+  update() {
+    if (this.posX <= 0) {
+      this.posX = 0;
+      this.deltaX = -this.deltaX;
+    } else if (this.posX + this.width >= this.ctxW) {
+      this.posX = this.ctxW - this.width;
+      this.deltaX = -this.deltaX;
+    }
+    if (this.posY <= 0) {
+      this.posY = 0;
+      this.deltaY = -this.deltaY;
+    } else if (this.posY + this.height >= this.ctxH) {
+      this.posY = this.ctxH - this.height;
+      this.deltaY = -this.deltaY;
+    }
+    this.posX += this.deltaX;
+    this.posY += this.deltaY;
+  }
+}
+
+// setup
+const item = new Item(ctx);
+
+// game loop
+function gameLoop() {
+  ctx.clearRect(0, 0, viewport.width, viewport.height);
+  item.update();
+  item.draw();
+  requestAnimationFrame(gameLoop);
+}
 
 export default () => {
-  animate();
+  requestAnimationFrame(gameLoop);
 };
