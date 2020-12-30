@@ -15,8 +15,9 @@ class Item {
     this.width = 50;
     this.height = 50;
     this.color = 'red';
-    this.deltaX = 5; // pixel/s?
-    this.deltaY = 5; // pixel/s?
+    this.velocityX = 0.25;
+    this.velocityY = 0.25;
+
     // FIXME
     // this still depends on the viewport context?
     this.ctx = ctx;
@@ -28,23 +29,24 @@ class Item {
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.posX, this.posY, this.width, this.height);
   }
-  update() {
+  update(timestep) {
     if (this.posX <= 0) {
       this.posX = 0;
-      this.deltaX = -this.deltaX;
+      this.velocityX = -this.velocityX;
     } else if (this.posX + this.width >= this.ctxW) {
       this.posX = this.ctxW - this.width;
-      this.deltaX = -this.deltaX;
+      this.velocityX = -this.velocityX;
     }
     if (this.posY <= 0) {
       this.posY = 0;
-      this.deltaY = -this.deltaY;
+      this.velocityY = -this.velocityY;
     } else if (this.posY + this.height >= this.ctxH) {
       this.posY = this.ctxH - this.height;
-      this.deltaY = -this.deltaY;
+      this.velocityY = -this.velocityY;
     }
-    this.posX += this.deltaX;
-    this.posY += this.deltaY;
+
+    this.posX += this.velocityX * timestep;
+    this.posY += this.velocityY * timestep;
   }
 }
 
@@ -52,13 +54,22 @@ class Item {
 const item = new Item(ctx);
 
 // game loop
-function gameLoop() {
+let frameLastTimeMs = 0;
+let frameDeltaTimeMs = 0;
+let timeStep = 1000 / 60;
+function gameLoop(timestamp) {
+  frameDeltaTimeMs += timestamp - frameLastTimeMs;
+  frameLastTimeMs = timestamp;
+  while (frameDeltaTimeMs >= timeStep) {
+    item.update(timeStep, timeStep);
+    requestAnimationFrame(gameLoop);
+    frameDeltaTimeMs -= timeStep;
+  }
   ctx.clearRect(0, 0, viewport.width, viewport.height);
-  item.update();
   item.draw();
-  requestAnimationFrame(gameLoop);
 }
 
 export default () => {
   requestAnimationFrame(gameLoop);
+  // gameLoop();
 };
