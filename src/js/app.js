@@ -10,43 +10,43 @@ const ctx = viewport.getContext('2d');
 // item block
 class Item {
   constructor(ctx) {
-    this.posX = 0;
-    this.posY = 0;
-    this.width = 50;
-    this.height = 50;
-    this.color = 'red';
-    this.velocityX = 0.25;
-    this.velocityY = 0.25;
+    this._posX = 0;
+    this._posY = 0;
+    this._width = 50;
+    this._height = 50;
+    this._color = 'red';
+    this._velocityX = 0.25;
+    this._velocityY = 0.25;
 
     // FIXME
     // this still depends on the viewport context?
-    this.ctx = ctx;
-    this.ctxW = ctx.canvas.width;
-    this.ctxH = ctx.canvas.height;
+    this._ctx = ctx;
+    this._ctxW = ctx.canvas.width;
+    this._ctxH = ctx.canvas.height;
   }
 
   draw() {
-    this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(this.posX, this.posY, this.width, this.height);
+    this._ctx.fillStyle = this._color;
+    this._ctx.fillRect(this._posX, this._posY, this._width, this._height);
   }
   update(timestep) {
-    if (this.posX <= 0) {
-      this.posX = 0;
-      this.velocityX = -this.velocityX;
-    } else if (this.posX + this.width >= this.ctxW) {
-      this.posX = this.ctxW - this.width;
-      this.velocityX = -this.velocityX;
+    if (this._posX <= 0) {
+      this._posX = 0;
+      this._velocityX = -this._velocityX;
+    } else if (this._posX + this._width >= this._ctxW) {
+      this._posX = this._ctxW - this._width;
+      this._velocityX = -this._velocityX;
     }
-    if (this.posY <= 0) {
-      this.posY = 0;
-      this.velocityY = -this.velocityY;
-    } else if (this.posY + this.height >= this.ctxH) {
-      this.posY = this.ctxH - this.height;
-      this.velocityY = -this.velocityY;
+    if (this._posY <= 0) {
+      this._posY = 0;
+      this._velocityY = -this._velocityY;
+    } else if (this._posY + this._height >= this._ctxH) {
+      this._posY = this._ctxH - this._height;
+      this._velocityY = -this._velocityY;
     }
 
-    this.posX += this.velocityX * timestep;
-    this.posY += this.velocityY * timestep;
+    this._posX += this._velocityX * timestep;
+    this._posY += this._velocityY * timestep;
   }
 }
 
@@ -54,19 +54,27 @@ class Item {
 const item = new Item(ctx);
 
 // game loop
-let frameLastTimeMs = 0;
-let frameDeltaTimeMs = 0;
+let currentTime = 0;
+let elapsedTime = 0;
+let updates = 0;
 let timeStep = 1000 / 60;
 function gameLoop(timestamp) {
-  frameDeltaTimeMs += timestamp - frameLastTimeMs;
-  frameLastTimeMs = timestamp;
-  while (frameDeltaTimeMs >= timeStep) {
+  elapsedTime += timestamp - currentTime;
+  currentTime = timestamp;
+  // here the if in the other code
+
+  updates = 0;
+  while (elapsedTime >= timeStep) {
     item.update(timeStep, timeStep);
-    requestAnimationFrame(gameLoop);
-    frameDeltaTimeMs -= timeStep;
+    elapsedTime -= timeStep;
+    if (++updates > 240) {
+      // panic()
+      break;
+    }
   }
   ctx.clearRect(0, 0, viewport.width, viewport.height);
   item.draw();
+  requestAnimationFrame(gameLoop);
 }
 
 export default () => {
