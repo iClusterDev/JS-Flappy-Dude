@@ -6,17 +6,17 @@
 // ctx.fillText(`FPS: ${fps}`, 20, viewport.height - 50);
 class Engine {
   constructor(handleUpdate, handleRender, handlePanic = () => {}) {
+    this.update = handleUpdate;
+    this.render = handleRender;
+    this.panic = handlePanic;
     this.currentTime = 0;
     this.elapsedTime = 0;
     // this.maxFPS = 120;
     this.timeStep = 1000 / 120;
-    this.fps = 60;
     this.framesThisSecond = 0;
     this.lastFpsUpdate = 0;
+    this.fps = 60;
     this.updates = 0;
-    this.update = handleUpdate;
-    this.render = handleRender;
-    this.panic = handlePanic;
     this.updated = true;
     this.requestAnimationFrame = null;
     // this.debug = false;
