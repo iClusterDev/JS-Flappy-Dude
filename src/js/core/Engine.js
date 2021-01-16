@@ -1,75 +1,80 @@
-// FIXME
-// add an handlePanic to pass into the constructor
-// check the purpose of the updated variable
-// add a debug functionality
-// ctx.fillStyle = 'black';
-// ctx.fillText(`FPS: ${fps}`, 20, viewport.height - 50);
+/**
+ * iClusterDev 2021
+ *
+ * This is a fixed time step game loop.
+ * can be used for any game and ensure that the game state is updated at the same time step across different devices.
+ * In case of slow devices, a memory spiral catch is in place to never allow three full frames passing without an update
+ */
 class Engine {
-  constructor(handleUpdate, handleRender, handlePanic = () => {}) {
-    this.update = handleUpdate;
-    this.render = handleRender;
-    this.panic = handlePanic;
-    this.currentTime = 0;
-    this.elapsedTime = 0;
-    // this.maxFPS = 120;
-    this.timeStep = 1000 / 120;
-    this.framesThisSecond = 0;
-    this.lastFpsUpdate = 0;
-    this.fps = 60;
-    this.updates = 0;
-    this.updated = true;
-    this.requestAnimationFrame = null;
-    // this.debug = false;
+  constructor(update, render) {
+    this._frameRequest = null;
+    this._currentTime = 0;
+    this._elapsedTime = 0;
+    this._timeStep = 1000 / 60;
+    this._updated = true;
+    this._updates = 0;
+    this._update = update;
+    this._render = render;
+    this._panic = () => console.log('PANIC!');
+
+    this._framesThisSecond = 0;
+    this._lastFpsUpdate = 0;
+    this._fps = 60;
   }
 
   run(timestamp) {
-    if (timestamp < this.currentTime + this.timeStep) {
-      this.requestAnimationFrame = window.requestAnimationFrame((timestamp) =>
-        this.run(timestamp)
-      );
-      return;
+    this._frameRequest = window.requestAnimationFrame((timestamp) =>
+      this.run(timestamp)
+    );
+
+    this._elapsedTime += timestamp - this._currentTime;
+    this._currentTime = timestamp;
+    this._updates = 0;
+
+    if (this._elapsedTime >= this._timeStep * 3) {
+      this._elapsedTime = this._timeStep;
     }
-    this.elapsedTime += timestamp - this.currentTime;
-    this.currentTime = timestamp;
-    if (timestamp > this.lastFpsUpdate + 1000) {
-      this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
-      this.lastFpsUpdate = timestamp;
-      this.framesThisSecond = 0;
-    }
-    this.framesThisSecond++;
-    this.updates = 0;
-    while (this.elapsedTime >= this.timeStep) {
-      this.elapsedTime -= this.timeStep;
-      this.update(this.timeStep);
-      if (++this.updates > 240) {
-        this.panic();
+
+    while (this._elapsedTime >= this._timeStep) {
+      this._elapsedTime -= this._timeStep;
+      this._update(this._timeStep);
+      if (++this._updates > 2) {
+        this._panic();
         break;
       }
+      this._updated = true;
     }
-    if (this.updated) {
-      this.render();
+
+    if (this._updated) {
+      this._updated = false;
+      this._render();
     }
-    this.requestAnimationFrame = window.requestAnimationFrame((timestamp) =>
-      this.run(timestamp)
-    );
-  }
-
-  start() {
-    this._elapsedTime = this._timeStep;
-    this._currentTime = window.performance.now();
-    this.requestAnimationFrame = window.requestAnimationFrame((timestamp) =>
-      this.run(timestamp)
-    );
-  }
-
-  stop() {
-    window.cancelAnimationFrame(this.requestAnimationFrame);
   }
 
   debug() {
+    if (this._currentTime > this._lastFpsUpdate + 1000) {
+      this._fps = 0.25 * this._framesThisSecond + 0.75 * this._fps;
+      this._lastFpsUpdate = this._currentTime;
+      this._framesThisSecond = 0;
+    }
+    this._framesThisSecond++;
     return {
-      fps: this.fps,
+      updates: this._updates,
+      elapsedTime: this._elapsedTime,
+      currentTime: this._currentTime,
+      fps: this._fps,
     };
+  }
+
+  start() {
+    this._frameRequest = window.requestAnimationFrame((timestamp) => {
+      this._currentTime = window.performance.now();
+      this.run(timestamp);
+    });
+  }
+
+  stop() {
+    window.cancelAnimationFrame(this._frameRequest);
   }
 }
 

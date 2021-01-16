@@ -18,9 +18,11 @@ const handleRender = () => {
   ctx.clearRect(0, 0, viewport.width, viewport.height);
   dummy.draw();
   // monitor the fps
-  // const { fps } = engine.debug();
-  // ctx.fillStyle = 'black';
-  // ctx.fillText(`FPS: ${fps}`, 20, viewport.height - 50);
+  const { fps, elapsedTime, updates } = engine.debug();
+  ctx.fillStyle = 'black';
+  ctx.fillText(`FPS: ${fps}`, 20, viewport.height - 30);
+  ctx.fillText(`Elapsed: ${elapsedTime}`, 20, viewport.height - 50);
+  ctx.fillText(`Updates: ${updates}`, 20, viewport.height - 70);
 };
 
 const dummy = new Dummy(ctx);
@@ -28,4 +30,10 @@ const engine = new Engine(handleUpdate, handleRender);
 
 export default () => {
   engine.start();
+  // setTimeout(() => {
+  //   engine.stop();
+  // }, 3000);
+  // setTimeout(() => {
+  //   engine.start();
+  // }, 6000);
 };
