@@ -19,7 +19,8 @@ class Dummy {
     this._ctx.fillStyle = this._color;
     this._ctx.fillRect(this._posX, this._posY, this._width, this._height);
   }
-  update(timestep) {
+
+  update(timeStep) {
     if (this._posX <= 0) {
       this._posX = 0;
       this._velocityX = -this._velocityX;
@@ -35,8 +36,8 @@ class Dummy {
       this._velocityY = -this._velocityY;
     }
 
-    this._posX += this._velocityX * timestep;
-    this._posY += this._velocityY * timestep;
+    this._posX += this._velocityX * timeStep;
+    this._posY += this._velocityY * timeStep;
   }
 }
 

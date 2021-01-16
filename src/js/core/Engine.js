@@ -2,16 +2,18 @@
  * iClusterDev 2021
  *
  * This is a fixed time step game loop.
- * can be used for any game and ensure that the game state is updated at the same time step across different devices.
- * In case of slow devices, a memory spiral catch is in place to never allow three full frames passing without an update
+ * can be used for any game and ensure that the game state is
+ * updated at the same time step across different devices.
+ * In case of slow devices, a memory spiral catch is in place
+ * to never allow three full frames passing without an update
  */
 class Engine {
   constructor(update, render) {
     this._frameRequest = null;
-    this._currentTime = 0;
+    this._currentTime = null;
     this._elapsedTime = 0;
     this._timeStep = 1000 / 60;
-    this._updated = true;
+    this._updated = false;
     this._updates = 0;
     this._update = update;
     this._render = render;
@@ -23,9 +25,10 @@ class Engine {
   }
 
   run(timestamp) {
-    this._frameRequest = window.requestAnimationFrame((timestamp) =>
-      this.run(timestamp)
-    );
+    if (!this._currentTime) this._currentTime = window.performance.now();
+    this._frameRequest = window.requestAnimationFrame((timestamp) => {
+      this.run(timestamp);
+    });
 
     this._elapsedTime += timestamp - this._currentTime;
     this._currentTime = timestamp;
@@ -46,8 +49,8 @@ class Engine {
     }
 
     if (this._updated) {
-      this._updated = false;
       this._render();
+      this._updated = false;
     }
   }
 
@@ -67,8 +70,8 @@ class Engine {
   }
 
   start() {
+    this._currentTime = window.performance.now();
     this._frameRequest = window.requestAnimationFrame((timestamp) => {
-      this._currentTime = window.performance.now();
       this.run(timestamp);
     });
   }
