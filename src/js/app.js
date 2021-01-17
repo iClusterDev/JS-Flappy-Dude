@@ -11,13 +11,12 @@ viewport.style.border = 'solid 1px black';
 document.body.appendChild(viewport);
 const ctx = viewport.getContext('2d');
 
-const keyDownUp = (event) => {
-  const { type, keyCode } = event;
-  controller.keyDownUp(type, keyCode);
-};
-
 const update = (timeStep) => {
-  dummy.update(timeStep);
+  if (controller.right.isActive) dummy.moveRight(timeStep);
+  // if (controller.down.isActive) dummy.moveDown(timeStep);
+  // if (controller.left.isActive) dummy.moveLeft(timeStep);
+  // if (controller.up.isActive) dummy.moveUp(timeStep);
+  // dummy.update(timeStep);
 };
 
 const render = () => {
@@ -35,15 +34,19 @@ const dummy = new Dummy(ctx);
 const controller = new Controller();
 const engine = new Engine(update, render);
 
+// controller: setup
+const keyDownUp = (event) => {
+  const { type, code } = event;
+  controller.keyDownUp(type, code);
+};
+
 window.addEventListener('keydown', keyDownUp);
 window.addEventListener('keyup', keyDownUp);
 
+const game = {
+  running: false,
+};
 export default () => {
   engine.start();
-  setTimeout(() => {
-    engine.stop();
-  }, 3000);
-  setTimeout(() => {
-    engine.start();
-  }, 3000);
+  game.running = true;
 };

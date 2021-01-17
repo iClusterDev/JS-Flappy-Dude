@@ -1,32 +1,43 @@
 // iClusterDev 2021
 
+// FIXME
+// make use of a .json file for this?
+const KEY_MAP = [
+  { code: 'Space', action: 'jump' },
+  { code: 'ArrowRight', action: 'right' },
+  { code: 'ArrowDown', action: 'down' },
+  { code: 'ArrowLeft', action: 'left' },
+  { code: 'ArrowUp', action: 'up' },
+];
+
 class KeyInput {
   constructor() {
-    this._isActive = false;
-    this._isDown = false;
+    this.isActive = false;
+    this.isDown = false;
   }
 
   getInput(isDown) {
-    if (this._isDown !== isDown) this._isActive = isDown;
-    this._isDown = isDown;
+    if (this.isDown !== isDown) this.isActive = isDown;
+    this.isDown = isDown;
   }
 }
 
 class Controller {
   constructor() {
-    this._right = 0;
-    this._down = 0;
-    this._left = 0;
-    this._up = 0;
+    KEY_MAP.forEach((keyItem) => {
+      const { action } = keyItem;
+      this[action] = new KeyInput();
+    });
   }
 
-  keyDownUp(type, keyCode) {
+  keyDownUp(type, code) {
     const isDown = type === 'keydown' ? true : false;
-    console.log(
-      'DEBUG ~ file: Controller.js ~ line 12 ~ Controller ~ keyDownUp ~ type, keyCode',
-      type,
-      keyCode
-    );
+    const keyItem = KEY_MAP.find((keyItem) => code === keyItem.code) || null;
+    if (keyItem) {
+      const { action } = keyItem;
+      this[action].getInput(isDown);
+      // console.log('DEBUG ~ file: Controller.js ~ ', this[action]);
+    }
   }
 }
 
