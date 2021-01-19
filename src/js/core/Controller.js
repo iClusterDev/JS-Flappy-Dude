@@ -3,7 +3,7 @@
 // FIXME
 // make use of a .json file for this?
 const KEY_MAP = [
-  { code: 'Space', action: 'jump' },
+  { code: 'Space', action: 'space' },
   { code: 'ArrowRight', action: 'right' },
   { code: 'ArrowDown', action: 'down' },
   { code: 'ArrowLeft', action: 'left' },
@@ -36,7 +36,6 @@ class Controller {
     if (keyItem) {
       const { action } = keyItem;
       this[action].getInput(isDown);
-      // console.log('DEBUG ~ file: Controller.js ~ ', this[action]);
     }
   }
 }
