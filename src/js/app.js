@@ -3,7 +3,7 @@ import Engine from './core/Engine';
 import BouncingBall from './assets/BouncingBall';
 import FlyingBird from './assets/FlyingBird';
 
-// viewport block
+// viewport block -----------------------------------------------
 let viewport = document.createElement('canvas');
 viewport.id = 'viewport';
 viewport.width = 600;
@@ -11,6 +11,7 @@ viewport.height = 400;
 viewport.style.border = 'solid 1px black';
 document.body.appendChild(viewport);
 const ctx = viewport.getContext('2d');
+// viewport block -----------------------------------------------
 
 const update = (timeStep) => {
   // if (controller.right.isActive) dummy.moveRight(timeStep);
@@ -18,7 +19,7 @@ const update = (timeStep) => {
   // if (controller.left.isActive) dummy.moveLeft(timeStep);
   // if (controller.up.isActive) dummy.moveUp(timeStep);
   // bouncingBall.update(timeStep);
-  flyingBird.update(false, timeStep);
+  flyingBird.update(controller.jump.isActive, timeStep);
 };
 
 const render = () => {
@@ -41,10 +42,10 @@ const engine = new Engine(update, render);
 // controller: setup
 const keyDownUp = (event) => {
   const { type, code } = event;
-  // console.log(
-  //   'DEBUG ~ file: app.js ~ line 40 ~ keyDownUp ~ event',
-  //   event.which
-  // );
+  console.log(
+    'DEBUG ~ file: app.js ~ line 40 ~ keyDownUp ~ event',
+    event.which
+  );
 
   controller.keyDownUp(type, code);
 };

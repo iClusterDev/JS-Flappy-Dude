@@ -24,20 +24,28 @@ class FlyingBird {
     // this.angle >= 359
     //   ? (this.angle = 0)
     //   : (this.angle += this.omega * timeStep);
-    // this._position.y -= curve;
-    // if (this._position.y > this._ctxH - this._size.y * 3 + curve) {
-    //   this._position.y = this._ctxH - this._size.y * 3 + curve;
-    //   this._velocity.y = 0;
-    // } else {
-    //   this._velocity.y += this.weight;
-    //   this._velocity.y *= 0.9;
-    //   this._position.y += this._velocity.y;
-    // }
-    // if (this._position.y < this._size.y * 2) {
-    //   this._position.y = this._size.y * 2;
-    //   this._velocity.y = 0;
-    // }
-    // if (spacePressed) this.flap();
+    // this._position.y += curve;
+    if (this._position.y > this._ctxH - this._size.y * 3) {
+      this._position.y = this._ctxH - this._size.y * 3;
+      this._velocity.y = 0;
+    } else {
+      this._velocity.y += this.weight;
+      this._velocity.y *= 0.95;
+      // console.log(
+      //   'DEBUG ~ file: FlyingBird.js ~ line 33 ~ FlyingBird ~ update ~ this._velocity.y',
+      //   this._velocity.y
+      // );
+      this._position.y += this._velocity.y;
+    }
+
+    if (this._position.y < this._size.y * 2) {
+      this._position.y = this._size.y * 2;
+      this._velocity.y = 0;
+    }
+
+    if (spacePressed) {
+      this.flap();
+    }
   }
 
   draw() {
@@ -50,9 +58,9 @@ class FlyingBird {
     );
   }
 
-  // flap() {
-  //   this._velocity.y -= 2;
-  // }
+  flap() {
+    this._velocity.y -= 2;
+  }
 }
 
 export default FlyingBird;
