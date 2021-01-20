@@ -1,7 +1,9 @@
 // iClusterDev 2021
 
-// FIXME
-// make use of a .json file for this?
+// FIXME ////////////////////////////////////////
+// make use of a .json file for KEY_MAP?
+// include mouse functionality
+// //////////////////////////////////////////////
 const KEY_MAP = [
   { code: 'Space', action: 'space' },
   { code: 'ArrowRight', action: 'right' },
