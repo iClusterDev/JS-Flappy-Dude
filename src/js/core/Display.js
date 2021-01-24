@@ -39,8 +39,8 @@ class Display {
       this._canvas.width = width;
       this._canvas.height = width * this._aspectRatio;
     } else {
-      this._canvas.height = height;
       this._canvas.width = height / this._aspectRatio;
+      this._canvas.height = height;
     }
 
     if (this._canvas.width >= this._maxWidth) {
