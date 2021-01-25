@@ -12,22 +12,6 @@ class Display {
     this._maxWidth = 900;
   }
 
-  // render() {
-  //   const { canvas: source } = this._buffer;
-  //   const { canvas: dest } = this._context;
-  //   this._context.drawImage(
-  //     source,
-  //     0,
-  //     0,
-  //     source.width,
-  //     source.height,
-  //     0,
-  //     0,
-  //     dest.width,
-  //     dest.height
-  //   );
-  // }
-
   clear() {
     this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
   }
