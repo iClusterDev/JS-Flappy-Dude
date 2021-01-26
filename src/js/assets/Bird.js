@@ -11,10 +11,6 @@ class Renderer {
     return new Vec2D(this._renderer.canvas.width, this._renderer.canvas.height);
   }
 
-  // get center() {
-  //   return new Vec2D(this.size.x / 2, this.size.y / 2);
-  // }
-
   get instance() {
     return this._renderer;
   }
@@ -34,7 +30,7 @@ class Context {
   }
 }
 
-class Buffer {
+class Buffer extends Context {
   constructor(width, height) {
     this._renderer = document.createElement('canvas').getContext('2d');
     this._renderer.canvas.height = height;
