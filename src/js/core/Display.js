@@ -3,36 +3,40 @@
 /**
  * Display.js
  * deals with resizing the context maintaining a constant aspect ratio
+ *
+ * FIXME:
+ * the clear method should probably belong to a World class?
  */
+
+import context from '../lib/Context';
+
 class Display {
   constructor() {
-    this._canvas = document.querySelector('canvas');
-    this._context = this._canvas.getContext('2d');
     this._aspectRatio = 0.75;
     this._maxWidth = 900;
   }
 
   clear() {
-    this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    context.instance.clearRect(0, 0, context.width, context.height);
   }
 
   resize() {
     const { innerWidth: width, innerHeight: height } = window;
 
     if (height / width > this._aspectRatio) {
-      this._canvas.width = width;
-      this._canvas.height = width * this._aspectRatio;
+      context.width = width;
+      context.height = width * this._aspectRatio;
     } else {
-      this._canvas.width = height / this._aspectRatio;
-      this._canvas.height = height;
+      context.width = height / this._aspectRatio;
+      context.height = height;
     }
 
-    if (this._canvas.width >= this._maxWidth) {
-      this._canvas.width = this._maxWidth;
-      this._canvas.height = this._maxWidth * this._aspectRatio;
+    if (context.width >= this._maxWidth) {
+      context.width = this._maxWidth;
+      context.height = this._maxWidth * this._aspectRatio;
     }
 
-    this._context.imageSmoothingEnabled = false;
+    context.instance.imageSmoothingEnabled = false;
   }
 }
 

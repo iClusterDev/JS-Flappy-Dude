@@ -8,6 +8,13 @@ const keyDownUp = (event) => {
   controller.keyDownUp(type, code);
 };
 
+/**
+ * Game has:
+ * engine *
+ * world *
+ * player *
+ * controller *
+ */
 const Game = {
   update(timeStep) {
     bird.update(timeStep, controller);
@@ -27,8 +34,6 @@ const engine = new Engine(Game.update, Game.render);
 window.addEventListener('resize', () => display.resize());
 window.addEventListener('keydown', keyDownUp);
 window.addEventListener('keyup', keyDownUp);
-
-// listeners setup
 
 export default () => {
   display.resize();

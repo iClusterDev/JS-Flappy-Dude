@@ -1,56 +1,30 @@
 import Vec2D from '../utils/Vec2D';
+import context from '../lib/Context';
 
-class Renderer {
-  constructor(canvas, width = null, height = null) {
-    this._renderer = canvas.getContext('2d');
-    this._renderer.canvas.height = height || canvas.height;
-    this._renderer.canvas.width = width || canvas.width;
+class Buffer {
+  constructor(posX = 0, posY = 0, width = 100, height = 100) {
+    this._instance = document.createElement('canvas').getContext('2d');
+    this._instance.canvas.height = height || canvas.height;
+    this._instance.canvas.width = width || canvas.width;
+    this._position = new Vec2D(posX, posY);
   }
 
   get size() {
-    return new Vec2D(this._renderer.canvas.width, this._renderer.canvas.height);
+    return new Vec2D(this._instance.canvas.width, this._instance.canvas.height);
+  }
+
+  get position() {
+    return this._position;
   }
 
   get instance() {
-    return this._renderer;
-  }
-}
-
-class Context {
-  constructor() {
-    this._renderer = document.querySelector('canvas').getContext('2d');
-  }
-
-  get size() {
-    return new Vec2D(this._renderer.canvas.width, this._renderer.canvas.height);
-  }
-
-  get instance() {
-    return this._renderer;
-  }
-}
-
-class Buffer extends Context {
-  constructor(width, height) {
-    this._renderer = document.createElement('canvas').getContext('2d');
-    this._renderer.canvas.height = height;
-    this._renderer.canvas.width = width;
-  }
-
-  get size() {
-    return new Vec2D(this._renderer.canvas.width, this._renderer.canvas.height);
-  }
-
-  get instance() {
-    return this._renderer;
+    return this._instance;
   }
 }
 
 class Bird {
   constructor() {
-    this._buffer = new Renderer(document.createElement('canvas'), 20, 20);
-    // this._context = new Renderer(document.querySelector('canvas'));
-    this._context = new Context();
+    this._buffer = new Buffer(0, 0, 20, 20);
     this._position = new Vec2D(150, 0);
     this._velocity = new Vec2D(0, 0.5);
     this._color = 'red';
@@ -67,7 +41,7 @@ class Bird {
       this._buffer.size.y
     );
 
-    this._context.instance.drawImage(
+    context.instance.drawImage(
       this._buffer.instance.canvas,
       0,
       0,
@@ -99,9 +73,11 @@ class Bird {
     if (controller.space.isActive) {
       this._velocity.y -= 0.25;
       this._isIdle = false;
+    } else if (this._position.y < context.height - 3 * this._buffer.size.y) {
+      this._isIdle = false;
     } else if (
       !controller.space.isActive &&
-      this._position.y === this._context.size.y - 2 * this._buffer.size.y &&
+      this._position.y === context.height - 2 * this._buffer.size.y &&
       this._position.y - oldPositionY === 0
     ) {
       this._isIdle = true;
@@ -115,17 +91,17 @@ class Bird {
       this._velocity.y += 0.125;
       this._velocity.y *= 0.9;
       this._position.y += this._velocity.y * timeStep;
+    }
 
-      if (this._position.y <= this._buffer.size.y && !this._isIdle) {
-        this._position.y = this._buffer.size.y;
-        this._velocity.y = -this._velocity.y;
-      } else if (
-        this._position.y + this._buffer.size.y >=
-        this._context.size.y - this._buffer.size.y
-      ) {
-        this._position.y = this._context.size.y - 2 * this._buffer.size.y;
-        this._velocity.y = 0;
-      }
+    if (this._position.y <= this._buffer.size.y) {
+      this._position.y = this._buffer.size.y;
+      this._velocity.y = -this._velocity.y;
+    } else if (
+      this._position.y + this._buffer.size.y >=
+      context.height - this._buffer.size.y
+    ) {
+      this._position.y = context.height - 2 * this._buffer.size.y;
+      this._velocity.y = 0;
     }
   }
 }
