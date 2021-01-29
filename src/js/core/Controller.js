@@ -1,9 +1,5 @@
 // iClusterDev 2021
 
-// FIXME ////////////////////////////////////////
-// make use of a .json file for KEY_MAP?
-// include mouse functionality
-// //////////////////////////////////////////////
 const KEY_MAP = [
   { code: 'Space', action: 'space' },
   { code: 'ArrowRight', action: 'right' },
@@ -24,12 +20,23 @@ class KeyInput {
   }
 }
 
+/**
+ * Controller.js
+ * singleton object handling the input state
+ *
+ * FIXME:
+ * include mouse functionality
+ * make use of a .json file for KEY_MAP?
+ */
 class Controller {
   constructor() {
+    if (Controller.instance) return Controller.instance;
+    Controller.instance = this;
     KEY_MAP.forEach((keyItem) => {
       const { action } = keyItem;
       this[action] = new KeyInput();
     });
+    return this;
   }
 
   keyDownUp(type, code) {
@@ -42,4 +49,15 @@ class Controller {
   }
 }
 
-export default Controller;
+// controller initialize
+const controller = new Controller();
+window.addEventListener('keydown', (event) => {
+  const { type, code } = event;
+  controller.keyDownUp(type, code);
+});
+window.addEventListener('keyup', (event) => {
+  const { type, code } = event;
+  controller.keyDownUp(type, code);
+});
+
+export default controller;

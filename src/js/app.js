@@ -1,12 +1,7 @@
-import Controller from './core/Controller';
+import controller from './core/Controller';
 import Display from './core/Display';
 import Engine from './core/Engine';
 import Bird from './assets/Bird';
-
-const keyDownUp = (event) => {
-  const { type, code } = event;
-  controller.keyDownUp(type, code);
-};
 
 /**
  * Game has:
@@ -28,12 +23,9 @@ const Game = {
 
 const bird = new Bird();
 const display = new Display();
-const controller = new Controller();
 const engine = new Engine(Game.update, Game.render);
 
 window.addEventListener('resize', () => display.resize());
-window.addEventListener('keydown', keyDownUp);
-window.addEventListener('keyup', keyDownUp);
 
 export default () => {
   display.resize();
